@@ -5,20 +5,24 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Products with actual image URLs from Unsplash
+// Serve static files from public folder
+app.use(express.static('public'));
+
+// Products with actual image URLs from Unsplash or local public folder
 let products = [
   {
     id: 1,
     name: "Diamond Necklace",
     price: 29999,
-    image: "/necklace.jpg",  // Remove /images/ since it's in root public folder
+    image: "/necklace.jpg",
     description: "Elegant diamond necklace with premium craftsmanship",
     category: "necklace",
     material: "Diamond & Gold"
-},
+  },
   {
     id: 2,
     name: "Gold Earrings",
@@ -27,7 +31,7 @@ let products = [
     description: "Traditional gold earrings with intricate design",
     category: "earrings",
     material: "24K Gold"
-},
+  },
   {
     id: 3,
     name: "Pearl Bracelet",
@@ -59,7 +63,7 @@ let products = [
     id: 6,
     name: "Emerald Bangle",
     price: 22999,
-    image: "bangle.webp",
+    image: "/bangle.webp",
     description: "Emerald bangle with gold plating",
     category: "bangle",
     material: "Emerald & Gold"
@@ -68,7 +72,7 @@ let products = [
     id: 7,
     name: "Diamond Stud Earrings",
     price: 34999,
-    image: "studs.webp",
+    image: "/studs.webp",
     description: "Premium diamond stud earrings",
     category: "earrings",
     material: "Diamond & Platinum"
@@ -77,7 +81,7 @@ let products = [
     id: 8,
     name: "Gold Chain Necklace",
     price: 12999,
-    image: "gold-necklace.webp",
+    image: "/gold-necklace.webp",
     description: "Classic gold chain necklace",
     category: "necklace",
     material: "22K Gold"
@@ -112,13 +116,11 @@ app.post('/api/cart', validateProduct, (req, res) => {
   try {
     const { id, name, price, image } = req.body;
     
-    // Check if product exists
     const product = products.find(p => p.id === id);
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    // Check if item already in cart
     const existingItem = cart.find(item => item.id === id);
     
     if (existingItem) {
@@ -154,7 +156,6 @@ app.put('/api/cart/:id', (req, res) => {
     }
     
     if (quantity <= 0) {
-      // Remove item if quantity is 0 or less
       cart = cart.filter(item => item.id !== parseInt(id));
     } else {
       item.quantity = quantity;
@@ -173,9 +174,7 @@ app.put('/api/cart/:id', (req, res) => {
 app.delete('/api/cart/:id', (req, res) => {
   try {
     const { id } = req.params;
-    
     cart = cart.filter(item => item.id !== parseInt(id));
-    
     res.json({
       message: 'Item removed from cart',
       cart: cart

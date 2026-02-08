@@ -35,3 +35,9 @@ A mini e-commerce application built with Next.js (frontend) and Node.js + Expres
 cd backend
 npm install
 npm run dev
+
+#### Frontend
+```bash
+cd frontend  
+npm install  
+npm run dev

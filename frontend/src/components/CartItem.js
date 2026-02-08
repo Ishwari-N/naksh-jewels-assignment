@@ -65,7 +65,6 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }) {
             <span className={styles.materialValue}>{item.material || 'Gold & Diamond'}</span>
           </div>
           
-          {/* Add Another Item Link */}
           <Link href="/" className={styles.addAnotherLink}>
             <span className={styles.addAnotherIcon}>+</span>
             Add Another Item
